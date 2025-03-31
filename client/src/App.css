@@ -1,0 +1,734 @@
+/* /src/App.css */
+
+.container {
+  padding: 20px;
+}
+
+h2 {
+  color: #333;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Navbar Styling */
+nav {
+  background-color: #007bff;
+  padding: 15px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+  list-style-type: none;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+nav ul li {
+  display: inline-block;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+nav ul li a:hover {
+  background-color: #0056b3;
+  color: #f4f7fc;
+}
+
+/* Mobile Navbar - Hamburger Menu */
+.hamburger {
+  display: none;
+  font-size: 30px;
+  color: white;
+  cursor: pointer;
+}
+
+.navbar-active ul {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+}
+
+.navbar-active ul li a {
+  font-size: 22px;
+  padding: 12px 20px;
+}
+
+@media (max-width: 768px) {
+  nav ul {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  nav ul li {
+    width: 100%;
+    text-align: center;
+  }
+
+  .hamburger {
+    display: block;
+    cursor: pointer;
+  }
+
+  nav.active ul {
+    display: flex;
+  }
+
+  nav ul li a {
+    padding: 12px 20px;
+  }
+}
+
+footer {
+  text-align: center;
+  padding: 10px;
+  /* background-color: #333; */
+  color: white;
+  /* position: fixed; */
+  width: 100%;
+  bottom: 0;
+  /* margin-top: 5rem; */
+}
+
+/* /src/App.css */
+
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f7fc;
+  color: #333;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Container for the entire dashboard */
+.dashboard {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Stats Section */
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.stat {
+  flex: 1 1 calc(33.33% - 20px); /* Responsive width */
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.stat h4 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.stat p {
+  font-size: 36px;
+  font-weight: bold;
+  color: #007bff;
+  margin-top: 10px;
+}
+
+/* Responsive layout for small screens (mobile) */
+@media (max-width: 768px) {
+  .stats {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .stat {
+    flex: 1 1 100%; /* Stacks the items vertically on small screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    padding: 10px;
+  }
+
+  .stat h4 {
+    font-size: 16px;
+  }
+
+  .stat p {
+    font-size: 28px;
+  }
+}
+
+/* Container for the attendance page */
+.attendance-page {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Attendance Table Section */
+.attendance-table {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table th,
+table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+table th {
+  background-color: #007bff;
+  color: white;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #218838;
+}
+
+/* Add a nice hover effect on rows */
+table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+@media (max-width: 768px) {
+  .attendance-page {
+    padding: 10px;
+  }
+
+  table {
+    font-size: 14px;
+  }
+
+  table th,
+  table td {
+    padding: 8px;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  h2 {
+    font-size: 20px;
+  }
+
+  table {
+    font-size: 12px;
+  }
+
+  table th,
+  table td {
+    padding: 6px;
+  }
+}
+
+.leave-request-page {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Styling */
+
+/* Container for the salary page */
+.salary-page {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Salary Table Section */
+.salary-table {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+table th {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+table td {
+  background-color: #f9f9f9;
+}
+
+table tr:hover td {
+  background-color: #f1f1f1;
+}
+
+/* Button for actions like printing or exporting */
+.salary-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.salary-actions button {
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  font-size: 16px;
+}
+
+.salary-actions button:hover {
+  background-color: #218838;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .salary-page {
+    padding: 15px;
+  }
+
+  table {
+    font-size: 14px;
+  }
+
+  table th,
+  table td {
+    padding: 10px;
+  }
+
+  .salary-actions button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  h2 {
+    font-size: 20px;
+  }
+
+  table {
+    font-size: 12px;
+  }
+
+  table th,
+  table td {
+    padding: 8px;
+  }
+
+  .salary-actions button {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}
+
+/* Add Employee Form Container */
+.add-employee {
+  padding: 20px;
+  max-width: 800px;
+  margin: 5rem auto;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Styling */
+.add-employee h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+form label {
+  font-size: 16px;
+  color: #333;
+  font-weight: 600;
+}
+
+form input {
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 100%;
+}
+
+form button {
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .add-employee {
+    padding: 15px;
+  }
+
+  form input {
+    font-size: 14px;
+  }
+
+  form button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .add-employee {
+    padding: 10px;
+  }
+
+  .add-employee h2 {
+    font-size: 20px;
+  }
+
+  form {
+    gap: 12px;
+  }
+
+  form input {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  form button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+/* Employees List Container */
+.employees-list {
+  padding: 20px;
+  max-width: 1000px;
+  margin: 1rem auto;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.employees-list .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.employees-list .header h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.add-employee-btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-employee-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Table Styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table th,
+table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.employees-list table tbody td:last-child {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.employees-list table tbody td .edit-btn{
+  background: goldenrod;
+  font-size: 12px;
+  padding: 6px 10px;
+  width: 100%;
+
+}
+
+.employees-list table tbody td .delete-btn{
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 4px;
+  width: 100%;
+  background-color: red;
+}
+
+table th {
+  background-color: #007bff;
+  color: white;
+}
+
+table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .employees-list {
+    padding: 15px;
+  }
+
+  .employees-list .header h2 {
+    font-size: 20px;
+  }
+
+  .add-employee-btn {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  table th,
+  table td {
+    padding: 10px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .employees-list {
+    padding: 10px;
+  }
+
+  .employees-list .header h2 {
+    font-size: 18px;
+  }
+
+  .add-employee-btn {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  table th,
+  table td {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  table {
+    font-size: 12px;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+/* Add Employee Form Container */
+/* Add Employee Form Container */
+.add-employee-form {
+  padding: 20px;
+  max-width: 800px;
+  margin: 5rem auto;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-employee-form h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Form Styling */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+input {
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+/* Submit Button */
+button.submit-btn {
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button.submit-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .add-employee-form {
+    padding: 15px;
+  }
+
+  form {
+    gap: 10px;
+  }
+
+  input {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  button.submit-btn {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .add-employee-form {
+    padding: 10px;
+  }
+
+  .add-employee-form h2 {
+    font-size: 20px;
+  }
+
+  form {
+    gap: 8px;
+  }
+
+  input {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  button.submit-btn {
+    font-size: 14px;
+    padding: 8px;
+  }
+}
