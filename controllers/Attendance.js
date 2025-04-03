@@ -2,7 +2,6 @@ const Attendance = require('../models/Attendance'); // Assume this is your Atten
 const User = require('../models/User'); // Assume this is your User model.
 const moment = require('moment'); // For handling date formats easily.
 const SalarySlip = require('../models/SalarySlip'); // Assuming the salary slip schema is in the SalarySlip model
-const { ObjectId } = require('mongodb');
 const Holidays = require('../models/Holidays');
 
 // Helper function to format date to 'YYYY-MM-DD'
@@ -149,27 +148,6 @@ exports.markAttendance = async (req, res) => {
       await attendance.save();
     }
 
-    // // If attendance exists, update it, otherwise create a new record
-    // if (attendance) {
-    //   attendance.status = status;
-    //   attendance.checkInTime = checkInTime;
-    //   await attendance.save();
-    // } 
-    // else {
-    //   // Create a new attendance record
-    //   attendance = new Attendance({
-    //     employeeId,
-    //     date: currentDate,
-    //     status: status,
-    //     checkInTime: checkInTime,
-    //     year: currentYear,
-    //     month: currentMonth,
-    //   });
-    //   await attendance.save();
-    // }
-
-    
-
     // Find the last marked "Present" or "Leave" day
     const lastMarkedAttendance = await Attendance.findOne({
       employeeId,
@@ -264,36 +242,6 @@ exports.markAttendance = async (req, res) => {
       await isSalarySlipExist.save()
       
     }
-
-    // Fetch the salary slip for the current month and year
-    // const salary = await calculateSalary(employeeId, `${currentYear}-${String(currentMonth).padStart(2, '0')}`, currentYear);
-    // if (!salary) {
-    //   return res.status(404).json({ message: 'Salary slip not found' });
-    // }
-
-    // Get total number of days in the current month
-    // const daysInMonth = moment(`${currentYear}-${String(currentMonth).padStart(2, '0')}`).daysInMonth();
-
-    // Count number of present days for the employee in the current month
-    // const presentDays = await Attendance.countDocuments({
-    //   employeeId,
-    //   month: currentMonth,
-    //   year: currentYear,
-    //   status: 'Present',
-    // });
-
-    // Calculate the per day wage
-    // const perDayWage = salary / daysInMonth;
-
-    // Calculate the payable salary based on the number of present days
-    // const payableSalary = perDayWage * presentDays;
-
-    // Update the salary slip with the payable salary
-    // const salarySlip = await SalarySlip.findOneAndUpdate(
-    //   { employeeId, month: `${currentYear}-${String(currentMonth).padStart(2, '0')}` },
-    //   { payableSalary, salaryAmount: salary },
-    //   { new: true, upsert: true } // Upsert ensures that the record is created if it doesn't exist
-    // );
 
     res.status(200).json({
       message: 'Attendance marked and salary updated successfully',
