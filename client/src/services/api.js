@@ -1,7 +1,8 @@
 // /src/services/api.js
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';  // Ensure the backend URL is correct
+// const API_URL = 'http://localhost:5000/api';  // Ensure the backend URL is correct
+const API_URL = 'https://kms-hrm.vercel.app/api';  // Ensure the backend URL is correct
 
 // API calls for Employee Management
 // export const getEmployees = async () => {

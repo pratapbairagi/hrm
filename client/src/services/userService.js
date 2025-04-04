@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 // Set the base URL for your backend API
-const API_URL = 'http://localhost:5000/api'; // Replace with your backend URL
+// const API_URL = 'http://localhost:5000/api'; // Replace with your backend URL
+const API_URL = 'https://kms-hrm.vercel.app/api'; // Replace with your backend URL
+
 const config = {
     headers: {
         "Content-Type": "application/json"

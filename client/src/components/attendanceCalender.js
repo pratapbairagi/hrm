@@ -45,7 +45,9 @@ const AttendanceCalendar = ({ userId }) => {
   useEffect(() => {
     const fetchAttendanceData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/attendance/getMonthlyAttendance/${userId}/${selectedYear}/${selectedMonth + 1}`);
+        // const response = await axios.get(`http://localhost:5000/api/attendance/getMonthlyAttendance/${userId}/${selectedYear}/${selectedMonth + 1}`);
+        const response = await axios.get(`https://kms-hrm.vercel.app/api/attendance/getMonthlyAttendance/${userId}/${selectedYear}/${selectedMonth + 1}`);
+
         // Normalize backend data to match the correct date format
         const normalizedAttendance = response.data.attendance.map(day => ({
           ...day,
@@ -86,7 +88,8 @@ const AttendanceCalendar = ({ userId }) => {
 
     // Make an API request to mark attendance in the backend
     try {
-      const response = await axios.post('http://localhost:5000/api/attendance/markAttendance', {
+      // const response = await axios.post('http://localhost:5000/api/attendance/markAttendance', {
+        const response = await axios.post('https://kms-hrm.vercel.app/api/attendance/markAttendance', {
         employeeId: userId,
         status: 'Present',
         checkInTime: new Date(),
