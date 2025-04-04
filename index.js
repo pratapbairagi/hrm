@@ -16,7 +16,7 @@ const app = express();
 // Middleware setup
 app.use(cors({
   credentials : true,
-    origin : [ "http://localhost:3001", "http://localhost:3000", "http://localhost:5000"],
+    origin : [ "https://kms-hrm.vercel.app", "http://localhost:3000", "http://localhost:5000"],
     // origin : "*",
     methods : ["GET", "PUT", "POST", "DELETE", "PATCH"],
     allowedHeaders : ["Content-Type", "Authorization"]
