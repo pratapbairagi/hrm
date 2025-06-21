@@ -65,9 +65,10 @@ export const attendanceUpdateRequest = async ({ userId, date, data }) =>{
 export const attendanceUpdateFromPublicQrScan = async ({ userId, date, checkInTime, checkOutTime, loginDuration, type }) =>{
 
   try {
-    const response = await axios.post(`${API_URL}/public/attendance/update/${userId}`, { userId, date, checkInTime, checkOutTime, loginDuration, type},  config);
+    const response = await axios.post(`${API_URL}/public/attendance/update/${userId}`, { userId, date, checkInTime, checkOutTime, loginDuration, type},  {...config, withCredentials : true });
     return response.data;
   } catch (error) {
+    console.log("error in attendance scan ", error)
     throw error.response ? error.response.data : error;
   }
 }

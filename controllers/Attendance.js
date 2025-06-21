@@ -457,7 +457,9 @@ exports.attendanceUpdateByPublicQrScan = async (req, res) => {
     });
 
   } catch (error) {
-    console.log("erooorrrr ", error)
+    console.log("erooorrrr ", error);
+    res.status(500).json({ message: 'Server error' });
+
   }
 }
 
