@@ -5,7 +5,12 @@ const attendanceSchema = new mongoose.Schema(
     employeeId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     date: { type: String, required: true }, // Format: 'YYYY-MM-DD'
     status: { type: String, enum: ['Present', 'Absent', 'Leave', 'Weekoff', "Holiday"], default: 'Absent' },
-    checkInTime: { type: Date }, // Store the time the employee checked in
+    checkInTime: { type: Date, default : null }, // Store the time the employee checked in
+    checkOutTime: { type: Date, default : null }, // Store the time the employee checked in
+    logInDuration : {
+      type : String,
+      default : "-- --"
+    },
     year: { type: Number, required: true },
     month: { type: Number, required: true },
     overTime : { type : Number, default : 0 },

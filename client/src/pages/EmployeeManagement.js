@@ -13,6 +13,7 @@ const EmployeeManagement = () => {
   }, []);
 
   const handleAttendance = (empId) => {
+    // axios.post(`http://localhost:5000/api/employees/attendance/${empId}`, attendance)
     axios.post(`https://kms-hrm.vercel.app/api/employees/attendance/${empId}`, attendance)
       .then(() => alert('Attendance updated'))
       .catch((err) => console.error('Error updating attendance:', err));

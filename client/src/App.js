@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import SalaryDetails from './components/SalaryDetails';
@@ -30,53 +30,99 @@ import EditSalarySlip from './components/SalarySlipEdit';
 import DateSelector from './components/DateSelector_weekoff';
 import {holidays} from "./data/holidays"
 import Holidays from './components/holidays';
+import AppWrapper from './AppWrapper';
 
 const App = () => {
   const [auth, setAuth] = useState(false);
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    async function checkLoggedUser() {
-      const { success, user } = await loggedUser();
-      if (success) {
-        setAuth(true);
-        setUser(user)
-      } else {
-        setAuth(false);
-      }
-    }
+  // useEffect(() => {
+  //   async function checkLoggedUser() {
+  //     const { success, user } = await loggedUser();
+  //     if (success) {
+  //       setAuth(true);
+  //       setUser(user)
+  //     } else {
+  //       setAuth(false);
+  //     }
+  //   }
 
-    checkLoggedUser();
-  }, []);
+  //   checkLoggedUser();
+  // }, []);
+
+  // const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   const checkAuth = async () => {
+  //     try {
+  //       const { success, user } = await loggedUser(); // checks if token/cookie is valid
+  //     } catch (err) {
+  //       if (err.message === 'Access denied. No token provided.') {
+  //         navigate('/login');
+  //       }
+  //     }
+  //   };
+
+  //   checkAuth();
+  // }, []);
+
 
   console.log("holidays ", holidays.length)
 
   return (
     <Router>
       <div className="container-fluid w-full flex h-screen">
-        {auth && <Navbar />}
+        {/* {auth && <Navbar />} */}
+        {/* {auth && <Dashboard />} */}
         <ToastContainer />
+      <AppWrapper setAuth={setAuth} setUser={setUser}>
         <Routes>
-          <Route exact path="/" element={<Home />} />
+          <Route exact path="/home" element={<Home />} />
           {/* If user is not logged in, redirect to auth page */}
           {/* If user is not logged in, redirect to auth page */}
-          <Route path="/auth" element={!auth ? <Auth /> : <Navigate to={user?.role === 'admin' ? "/dashboard" : "/profile"} />} />
+          <Route path="/auth" element={!auth ? <Auth /> : <Navigate to={"/"} />} />
           {/* <Route path="/auth" element={!auth ? <Auth /> : <Navigate to="/dashboard" />} /> */}
 
           {/* Protected Routes */}
           <Route
-            path="/dashboard"
-            element={auth && user?.role === 'admin' ? <Dashboard /> : <Navigate to={auth ? "/profile" : "/auth"} />}
+            path="/"
+            element={auth && user?.role === 'admin' ? <Dashboard user={user} /> : <Navigate to={auth ? "/" : "/auth"} />}
+          />
+
+           <Route 
+            path="/attendance" 
+            element={auth ? <AttendanceCalendar userId={user._id} /> : <Navigate to="/auth" />} 
           />
           <Route 
+            path="/employee/edit/:id" 
+            element={auth ? <EditEmployeeForm /> : <Navigate to="/auth" />} 
+          />
+          <Route 
+            path="/date-select/:employeeId" 
+            element={auth ? <DateSelector user={user} /> : <Navigate to="/auth" />} 
+          />
+          <Route 
+            path="/holidays/list" 
+            element={auth ? <Holidays user={user} /> : <Navigate to="/auth" />} 
+          />
+          
+          {/* <Route 
+            path="/add-employee" 
+            element={auth ? <AddEmployeeForm /> : <Navigate to="/auth" />} 
+          />
+          <Route 
+            path="/date-select/:employeeId" 
+            element={auth ? <DateSelector user={user} /> : <Navigate to="/auth" />} 
+          /> */}
+          {/* <Route 
             path="/profile" 
             element={auth ? <Profile user={user} /> : <Navigate to="/auth" />} 
-          />
+          /> */}
           {/* <Route 
             path="/attendance" 
             element={auth ? <MarkAttendance /> : <Navigate to="/auth" />} 
           /> */}
-          <Route 
+          {/* <Route 
             path="/attendance" 
             element={auth ? <AttendanceCalendar userId={user._id} /> : <Navigate to="/auth" />} 
           />
@@ -136,8 +182,9 @@ const App = () => {
           <Route 
             path="/salary" 
             element={auth ? <SalaryDetails /> : <Navigate to="/auth" />} 
-          />
+          /> */}
         </Routes>
+    </AppWrapper>
       </div>
       <Footer />
     </Router>

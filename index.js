@@ -22,6 +22,7 @@ app.use(cors({
     allowedHeaders : ["Content-Type", "Authorization"]
 }));
 
+
 app.use(express.json({limit : "15mb"})) // To parse incoming JSON data
 app.use(express.urlencoded({extended : true, limit : "50mb"}))
 app.use(bodyParser.json({ limit : "25mb"}))

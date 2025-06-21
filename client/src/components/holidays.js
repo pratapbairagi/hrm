@@ -78,7 +78,7 @@ const Holidays = ({ user }) => {
         return months[date.getMonth()]; // Return the month name
     }
 
-    console.log("holidays list check for update ", holidays)
+    // console.log("holidays list check for update ", holidays)
 
     return (
         <div className="container mx-auto p-4">

@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { attendanceUpdateRequest } from "../services/attendanceService";
+import {Html5Qrcode} from "html5-qrcode"
+import QrReader from "react-qr-reader";
 
 const AttendanceCalendar = ({ userId }) => {
   const [attendanceData, setAttendanceData] = useState([]);
@@ -168,6 +170,67 @@ const AttendanceCalendar = ({ userId }) => {
   }, [selectedYear, selectedMonth])
 
 
+  // check qr code existance then proceed for attendance
+  const [qrData, setQrData] = useState("")
+  const checkQrCodeToMarkAttendance = async ({ date, time }) => {
+  const qrRegionId = "qr-scanner";
+  const html5Qrcode = new Html5Qrcode(qrRegionId);
+
+  const config = {
+    fps: 10,
+    qrbox: { width: 250, height: 250 },
+  };
+
+  try {
+    await html5Qrcode.start(
+      { facingMode: "environment" }, // Rear camera (or choose deviceId if needed)
+      config,
+      async (decodedText, decodedResult) => {
+        console.log("✅ Scanned QR Code:", decodedText);
+
+        try {
+          const parsed = JSON.parse(decodedText);
+
+          // ✅ Match employeeId from QR with current user
+          if (parsed?.employeeId === userId) {
+            toast.success("QR Verified, marking attendance...");
+
+            // Stop scanner
+            await html5Qrcode.stop();
+            document.getElementById(qrRegionId).innerHTML = "";
+
+            // ✅ Call your attendance function
+            await handleMarkAttendance(new Date().getDate());
+          } else {
+            toast.error("Invalid QR Code for this user.");
+          }
+        } catch (error) {
+          toast.error("QR Code does not contain valid JSON.");
+        }
+      },
+      (scanError) => {
+        console.warn("QR scan failed:", scanError);
+        // (Optional) Show scanning feedback or ignore
+      }
+    );
+  } catch (err) {
+    toast.error("Unable to access camera for QR scanning.");
+    console.error("Camera error:", err);
+  }
+};
+
+ const [webcamResult, setWebcamResult] = useState("");
+const webcamError = (error) => {
+    if (error) {
+      console.log(error);
+    }
+  };
+  const webcamScan = (result) => {
+    if (result) {
+      setWebcamResult(result);
+    }
+  };
+
 
   console.log("attendanceData ", Datessss)
   return (
@@ -253,12 +316,16 @@ const AttendanceCalendar = ({ userId }) => {
 
       {/* Button to Mark Today's Attendance */}
       <div className="flex justify-center">
-        <button
+        {/* <button
           onClick={() => handleMarkAttendance(new Date().getDate())}
           className="px-3 py-2 bg-blue-600 text-sm text-white font-bold rounded-md hover:bg-blue-700 transition duration-300"
         >
           Mark Today's Attendance
-        </button>
+        </button> */}
+        {/* <button
+          onClick={() => checkQrCodeToMarkAttendance({ date : new Date().getDate(), time : new Date().getTime() })}
+          className="px-3 py-2 bg-blue-600 text-sm text-white font-bold rounded-md hover:bg-blue-700 transition duration-300"
+        >Mark Attendance</button> */}
       </div>
 
       {/* Popup Form for Attendance Update / Overtime Request */}
@@ -308,6 +375,18 @@ const AttendanceCalendar = ({ userId }) => {
           </div>
         </div>
       )}
+      <QrReader
+          delay={300}
+          onError={webcamError}
+          onScan={webcamScan}
+          legacyMode={false}
+          facingMode={"environment"}
+          className=''
+        />
+
+      <div className="card-footer rounded mb-1">
+        <h6>WebCam Result: {webcamResult}</h6>
+      </div>
     </div>
   );
 };

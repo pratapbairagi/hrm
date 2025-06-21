@@ -14,7 +14,7 @@ router.route('/login').post(loginUser); // Login Route
 router.route('/users').post(createUser); // Create new user (for Admin only)
 
 // Protected Routes (requires authentication)
-router.use(authMiddleware.verifyToken); // Protect these routes with the JWT middleware
+// router.use(authMiddleware.verifyToken); // Protect these routes with the JWT middleware
 
 router.route('/logged').get(verifyCookieToken, userLogged); // Get all users (Admin only)
 router.route('/users').get(verifyCookieToken, adminAuthrized("admin"), getAllUsers); // Get all users (Admin only)

@@ -2,7 +2,11 @@ const jwt = require('jsonwebtoken');
 
 // Middleware to check if user is logged in (using cookie-based authentication)
 exports.verifyCookieToken = (req, res, next) => {
+  console.log("logged out user 1")
+
   const token = req.cookies.auth_token; // Retrieve token from cookies
+
+  console.log("logged out user ", token)
 
   if (!token) {
     return res.status(401).json({ message: 'Access denied. No token provided.' });

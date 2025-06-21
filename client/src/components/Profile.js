@@ -4,8 +4,8 @@ import { NavLink } from 'react-router-dom';
 const Profile = ({user}) => {
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="container mx-auto px-4 py-2 lg:py-12">
+      <div className="max-w-4xl mx-auto bg-white rounded-lg">
         <div className="md:flex">
           {/* Profile Image */}
           <div className="w-full md:w-1/3 bg-gray-200 flex justify-center items-center">
@@ -19,7 +19,7 @@ const Profile = ({user}) => {
           </div>
 
           {/* Profile Details */}
-          <div className="w-full md:w-2/3 p-6">
+          <div className="w-full md:w-2/3 py-6 px-0 md:px-6">
             <div className="flex flex-col md:flex-row justify-between mb-4">
               <div>
                 <h2 className="text-3xl font-semibold text-gray-800 capitalize">{user?.name}</h2>
@@ -33,6 +33,9 @@ const Profile = ({user}) => {
                 </NavLink>
                 <NavLink to={`/pay-slip/${user?._id}`} className="px-4 py-2 bg-red-500 text-white text-sm rounded-md hover:bg-red-600 focus:outline-none">
                   Salary Slip
+                </NavLink>
+                <NavLink to={`/attendance`} className="px-4 py-2 bg-red-500 text-white text-sm rounded-md hover:bg-red-600 focus:outline-none">
+                  Attendance
                 </NavLink>
               </div>
             </div>
@@ -93,6 +96,7 @@ const Profile = ({user}) => {
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>

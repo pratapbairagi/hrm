@@ -34,10 +34,10 @@ const AddEmployeeForm = () => {
   };
 
   return (
-    <div className="add-employee-form">
+    <div className="add-employee-form w-[100%]">
       <h2>Add New Employee</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
+      <form className='flex flex-wrap w-[100%] bg-danger-600' onSubmit={handleSubmit}>
+        <div className="form-group w-full md:w-[48%]">
           <label htmlFor="name">Name</label>
           <input
             type="text"
@@ -50,7 +50,7 @@ const AddEmployeeForm = () => {
           />
         </div>
 
-        <div className="form-group">
+        <div className="form-group w-full md:w-[48%]">
           <label htmlFor="email">Email</label>
           <input
             type="email"
@@ -63,7 +63,7 @@ const AddEmployeeForm = () => {
           />
         </div>
 
-        <div className="form-group">
+        <div className="form-group w-full md:w-[48%]">
           <label htmlFor="department">Department</label>
           <input
             type="text"
@@ -76,7 +76,7 @@ const AddEmployeeForm = () => {
           />
         </div>
 
-        <div className="form-group">
+        <div className="form-group w-full md:w-[48%]">
           <label htmlFor="role">Role</label>
           <input
             type="text"
@@ -89,7 +89,7 @@ const AddEmployeeForm = () => {
           />
         </div>
 
-        <div className="form-group">
+        <div className="form-group w-full md:w-[48%]">
   <label htmlFor="salary">Salary</label>
   <input
     type="number"
@@ -102,7 +102,7 @@ const AddEmployeeForm = () => {
   />
 </div>
 
-<div className="form-group">
+<div className="form-group w-full md:w-[48%]">
   <label htmlFor="password">Password</label>
   <input
     type="password"
@@ -115,7 +115,7 @@ const AddEmployeeForm = () => {
   />
 </div>
 
-        <div className="form-group">
+        <div className="form-group w-full md:w-[48%]">
           <label htmlFor="hireDate">Hire Date</label>
           <input
             type="date"

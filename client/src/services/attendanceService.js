@@ -21,6 +21,16 @@ export const markAttendance = async (attendanceData) => {
   }
 };
 
+// Mark attendance for today
+export const markAttendanceBasedOnQRScan = async (attendanceData) => {
+  try {
+    const response = await axios.post(`${API_URL}/qr/attendance`, attendanceData);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
+};
+
 // Get today's attendance for all employees (Admin only)
 export const getTodayAttendance = async () => {
   try {
@@ -49,6 +59,16 @@ export const attendanceUpdateRequest = async ({ userId, date, data }) =>{
   } catch (error) {
     throw error.response ? error.response.data : error;
 
+  }
+}
+
+export const attendanceUpdateFromPublicQrScan = async ({ userId, date, checkInTime, checkOutTime, loginDuration, type }) =>{
+
+  try {
+    const response = await axios.post(`${API_URL}/public/attendance/update/${userId}`, { userId, date, checkInTime, checkOutTime, loginDuration, type},  config);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
   }
 }
 

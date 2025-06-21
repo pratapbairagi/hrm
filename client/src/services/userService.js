@@ -7,14 +7,14 @@ const API_URL = 'https://kms-hrm.vercel.app/api'; // Replace with your backend U
 const config = {
     headers: {
         "Content-Type": "application/json"
-    },
-    withCredentials: true
+    }
+    // withCredentials: true
 }
 
 // Register a new user (Admin can add employees)
 export const createUser = async (userData) => {
   try {
-    const response = await axios.post(`${API_URL}/users`, userData, config);
+    const response = await axios.post(`${API_URL}/users`, userData, {...config, withCredentials: true});
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error;
@@ -42,11 +42,14 @@ export const loggedUser = async () => {
 };
 
 // Get all users (Admin only)
-export const getAllUsers = async () => {
+export const getAllUsers = async ({attendance = null}) => {
   try {
-    const response = await axios.get(`${API_URL}/users`, config);
+    const url = attendance ? `${API_URL}/users?attendance=${attendance}` : `${API_URL}/users`
+    let response = await axios.get(url, {...config, withCredentials: true});
+     
     return response.data;
   } catch (error) {
+    console.log("error ", error)
     throw error.response ? error.response.data : error;
   }
 };
@@ -54,7 +57,7 @@ export const getAllUsers = async () => {
 // Get a specific user (by ID)
 export const getUserById = async (id) => {
   try {
-    const response = await axios.get(`${API_URL}/user/${id}`, config);
+    const response = await axios.get(`${API_URL}/user/${id}`, {...config, withCredentials: true});
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error;
@@ -64,7 +67,7 @@ export const getUserById = async (id) => {
 // delete user (by ID)
 export const deleteUserById = async (id) => {
   try {
-    const response = await axios.delete(`${API_URL}/user/delete/${id}`, config);
+    const response = await axios.delete(`${API_URL}/user/delete/${id}`, {...config, withCredentials: true});
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error;
@@ -74,7 +77,7 @@ export const deleteUserById = async (id) => {
 // Update a user profile (Admin only)
 export const updateUser = async (userId, updatedData) => {
   try {
-    const response = await axios.put(`${API_URL}/users/${userId}`, updatedData, config);
+    const response = await axios.put(`${API_URL}/users/${userId}`, updatedData, {...config, withCredentials: true});
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error;
@@ -85,7 +88,7 @@ export const updateUser = async (userId, updatedData) => {
 // logout
 export const logoutUser = async () => {
   try {
-    await axios.get(`${API_URL}/logout`, config);
+    await axios.get(`${API_URL}/logout`, {...config, withCredentials: true});
     window.location.reload()
   } catch (error) {
     throw error.response ? error.response.data : error;
@@ -95,7 +98,7 @@ export const logoutUser = async () => {
 // dashboard contents
 export const getDashabordContents = async () => {
   try {
-   const response = await axios.get(`${API_URL}/dashboard`, config);
+   const response = await axios.get(`${API_URL}/dashboard`, {...config, withCredentials: true});
     return response.data;
   } catch (error) {
     console.log("admin contents error ", error)

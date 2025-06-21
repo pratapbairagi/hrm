@@ -526,6 +526,7 @@ form button:hover {
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  /* background-color: rgba(0, 0, 0, 0.304); */
 }
 
 .add-employee-btn:hover {
@@ -633,7 +634,7 @@ table tr:nth-child(even) {
 /* Add Employee Form Container */
 .add-employee-form {
   padding: 20px;
-  max-width: 800px;
+  width: 100%;
   margin: 5rem auto;
   background-color: white;
   border-radius: 8px;
@@ -648,11 +649,11 @@ table tr:nth-child(even) {
 }
 
 /* Form Styling */
-form {
+/* form {
   display: flex;
   flex-direction: column;
   gap: 15px;
-}
+} */
 
 .form-group {
   display: flex;

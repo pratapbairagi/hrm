@@ -57,7 +57,7 @@ const AllLeaves = () => {
 
   return (
     <div className="w-full overflow-x-auto p-4">
-      <h2 className="text-xl font-semibold mb-4">All Leave Requests (Pending & Approved)</h2>
+      <h2 className="text-xl font-semibold mb-4">Leave Requests</h2>
       <table className="min-w-full bg-white border border-gray-200 rounded-lg">
         <thead className="bg-gray-100">
           <tr>

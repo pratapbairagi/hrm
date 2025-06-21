@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getEmployees, deleteEmployee } from '../services/api';
 import { Link } from 'react-router-dom';
 // import { employees } from '../data/employees';
 import { FaEdit } from 'react-icons/fa';  // Arrow icons for expand/collapse
+import {QRCodeCanvas} from "qrcode.react"
 
 import { deleteUserById, getAllUsers } from '../services/userService';
 import { toast } from 'react-toastify';
@@ -13,7 +14,7 @@ const EmployeesList = () => {
 
   useEffect(() => {
    async function getEmployeesFun (){
-    const data = await getAllUsers()
+    const data = await getAllUsers({attendance:""})
     setEmployeesList(data?.users)
     }
     getEmployeesFun()
@@ -32,12 +33,39 @@ const EmployeesList = () => {
     }
   };
 
+  // qr generator fun
+  const [qrCodeData,setQrCodeData] = useState(null);
+  const qrRef = useRef();
+  // const [qrCodeImage,setQrCodeImage] = useState(null);
+
+
+  const generateQr = async ({name, id, comp, type }) => {
+
+    let dataToEncode =  JSON.stringify(`${comp}_${id}_${name}_${type}`);
+    setQrCodeData(dataToEncode);
+
+    setTimeout(()=>{
+      const canvas = qrRef.current?.querySelector("canvas");
+      if(canvas){
+        const img = canvas.toDataURL("img/png");
+
+        const link = document.createElement("a");
+        link.href = img;
+        link.download = `${name}_attendance_QR${type}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link)
+      }
+    }, 200)
+
+  }
+
   return (
-    <div className="employees-list max-h-screen overflow-auto relative">
+    <div style={{maxWidth:"100vw"}} className="employees-list max-h-screen overflow-auto relative">
       <div className="header sticky top-[-20px] right-7 flex items-center bg-white w-[100%] px-2 py-2" >
         <h2 className='left-1 mb-0'>Employees</h2>
         <Link to="/add-employee">
-          <button className="add-employee-btn">Add Employee</button>
+          <button style={{width:"max-content"}} className="add-employee-btn">Add Employee</button>
         </Link>
       </div>
 
@@ -75,6 +103,13 @@ const EmployeesList = () => {
                 <Link to={`/pay-slip/${employee._id}`}>
                   <button className="view-pay-slip-btn text-[10px]">Payslip</button>
                 </Link>
+                <button disabled={loading} className="qr-btn view-pay-slip-btn text-[10px] mt-2" onClick={() => generateQr({comp : "KMS", id: employee._id, name: employee.name, type : "login" })}>
+                  Login QR
+                </button>
+                <button disabled={loading} className="qr-btn view-pay-slip-btn text-[10px] mt-2" onClick={() => generateQr({comp : "KMS", id: employee._id, name: employee.name, type : "logout" })}>
+                  Logout QR
+                </button>
+                
               </td>
               <td>
                 <Link to={`/employee/edit/${employee._id}`}>
@@ -88,6 +123,11 @@ const EmployeesList = () => {
           ))}
         </tbody>
       </table>
+      {qrCodeData && (
+        <div style={{display:"none"}} ref={qrRef}>
+            <QRCodeCanvas value={qrCodeData} size={250} includeMargin={true} />
+        </div>
+      )}
     </div>
   );
 };

@@ -48,9 +48,6 @@ const DateSelector = ({ userId }) => {
     const dateStr = `${localDate.getFullYear()}-${(localDate.getMonth() + 1).toString().padStart(2, '0')}-${localDate.getDate().toString().padStart(2, '0')}`;
     
     const alreadySelected = selectedDates.some(d => d.date === dateStr);
-  
-    console.log("selected date ", day.date);  // Local date
-    console.log("Formatted date as YYYY-MM-DD: ", dateStr);  // Correctly formatted local date
     
     if (selectedDates.length < 5 && !alreadySelected) {
       setSelectedDates([...selectedDates, {
@@ -86,7 +83,6 @@ const DateSelector = ({ userId }) => {
 
        const response = await setWeekoff(employeeId, selectedDate)
         setLoading(false);
-        // alert('Dates submitted successfully!');
         toast.success('Week Off set successfully !')
       } catch (error) {
         console.log("Error updating weekoff ! ", error)

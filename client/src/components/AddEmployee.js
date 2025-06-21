@@ -28,9 +28,9 @@ const AddEmployee = () => {
   };
 
   return (
-    <div className="add-employee">
+    <div className="add-employee w-full">
       <h2>Add Employee</h2>
-      <form onSubmit={handleSubmit}>
+      <form  onSubmit={handleSubmit}>
         <label>Name</label>
         <input
           type="text"

@@ -123,9 +123,9 @@ exports.markAttendance = async (req, res) => {
       date: currentDate,
     });
 
-    if( attendance ){
-      if( attendance.status !== "Present"){
-          attendance = new Attendance({
+    if (attendance) {
+      if (attendance.status !== "Present") {
+        attendance = new Attendance({
           employeeId,
           date: currentDate,
           status: status,
@@ -136,7 +136,7 @@ exports.markAttendance = async (req, res) => {
         await attendance.save();
       }
     }
-    else{
+    else {
       attendance = new Attendance({
         employeeId,
         date: currentDate,
@@ -201,46 +201,46 @@ exports.markAttendance = async (req, res) => {
     if (!isSalarySlipExist) {
 
       let lastSalarySlip = await SalarySlip.findOne({ employeeId: employeeId }).sort({ createdAt: -1 });
-  
+
       const newSalarySlip = await SalarySlip.create({
         salaryComponents: {
           ...lastSalarySlip.salaryComponents,
           bonus: 0,
           overtime: 0
         },
-        salaryAmount : lastSalarySlip.salaryAmount,
-        month : `${currentYear}-${currentMonth}`,
-        employeeId : employeeId
+        salaryAmount: lastSalarySlip.salaryAmount,
+        month: `${currentYear}-${currentMonth}`,
+        employeeId: employeeId
       })
     }
-    else{
-    
-     const date = moment().format('YYYY-M');
+    else {
 
-      let isHolidaysExist = await Holidays.find( { "date.datetime.year" : Number(date.split("-")[0]), "date.datetime.month" : Number(date.split("-")[1]), active : true  } );
-    
-    isHolidaysExist = isHolidaysExist.map((v,i)=> {
-      let daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      const date = moment().format('YYYY-M');
+
+      let isHolidaysExist = await Holidays.find({ "date.datetime.year": Number(date.split("-")[0]), "date.datetime.month": Number(date.split("-")[1]), active: true });
+
+      isHolidaysExist = isHolidaysExist.map((v, i) => {
+        let daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         const fulldate = `${v.date.datetime.year}-${(v.date.datetime.month).toString().padStart(2, "0")}-${(v.date.datetime.day).toString().padStart(2, "0")}`;
         const exactDate = new Date(fulldate)
         daysOfWeek = daysOfWeek[exactDate.getDay()];
         return {
-          daysLength : i+1,
-          dates : fulldate,
-          days : daysOfWeek
+          daysLength: i + 1,
+          dates: fulldate,
+          days: daysOfWeek
         }
       })
 
-      let isSalarySlipExist = await SalarySlip.findOne({ month : `${isHolidaysExist[0].dates.split("-")[0]}-${isHolidaysExist[0].dates.split("-")[1]}`, employeeId : user._id });
+      let isSalarySlipExist = await SalarySlip.findOne({ month: `${isHolidaysExist[0].dates.split("-")[0]}-${isHolidaysExist[0].dates.split("-")[1]}`, employeeId: user._id });
 
       isSalarySlipExist.holiday = {
-        daysLength : isHolidaysExist.length,
-        dates : isHolidaysExist.map(v=> v.dates),
-        days : isHolidaysExist.map(v=> v.days),
+        daysLength: isHolidaysExist.length,
+        dates: isHolidaysExist.map(v => v.dates),
+        days: isHolidaysExist.map(v => v.days),
       };
 
-      await isSalarySlipExist.save()
-      
+      await isSalarySlipExist.save();
+
     }
 
     res.status(200).json({
@@ -253,6 +253,213 @@ exports.markAttendance = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+
+// calculate login duration
+async function loginDurationFun ({checkInTime, checkOutTime}) {
+  const loginTime = moment(checkInTime);
+  const logoutTime = moment(checkOutTime);
+  duration = moment.duration(logoutTime.diff(loginTime));
+
+  return `${duration.hours()}:${duration.minutes()}`
+
+}
+// mark attendance from public scan qr code for attendance
+exports.attendanceUpdateByPublicQrScan = async (req, res) => {
+  let { userId, checkInTime, checkOutTime, logInDuration, date, type } = req.body;
+  let currentYear = date.split("/")[2];
+  let currentMonth = date.split("/")[0];
+  let currentDay = date.split("/")[1];
+  currentDay = currentDay.toString().padStart(2, "0")
+  currentMonth = currentMonth.toString().padStart(2, "0")
+
+  try {
+    // Find the user by ID
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if the attendance for the current day is already marked
+    let attendance = await Attendance.findOne({
+      employeeId: userId,
+      date: `${currentYear}-${currentMonth}-${currentDay}`,
+    });
+
+    if (attendance) {
+      if (attendance.status !== "Present") {
+
+        attendance = new Attendance({
+          employeeId: userId,
+          date: `${currentYear}-${currentMonth}-${currentDay}`,
+          status: "Present",
+          checkInTime: checkInTime ? checkInTime : null,
+          checkOutTime: checkOutTime ? checkOutTime : null,
+          logInDuration: logInDuration,
+          year: currentYear,
+          month: currentMonth,
+        });
+        await attendance.save();
+      }
+      else {
+        if(attendance.checkInTime){
+        attendance.checkOutTime = checkOutTime;
+        attendance.logInDuration = await loginDurationFun({checkInTime : attendance.checkInTime, checkOutTime})
+        await attendance.save();
+        }
+        else{
+          return res.status(401).json({
+            message : "Sorry, you are not logged in !"
+          })
+        }
+      }
+    }
+    else {
+      attendance = new Attendance({
+        employeeId: userId,
+        date: `${currentYear}-${currentMonth}-${currentDay}`,
+        status: "Present",
+        checkInTime: checkInTime ? checkInTime : null,
+        checkOutTime: checkOutTime ? checkOutTime : null,
+        logInDuration: logInDuration,
+        year: currentYear,
+        month: currentMonth,
+      });
+      await attendance.save();
+    }
+
+    // console.log("saved attend ", await Attendance.findOne({ employeeId : userId, date : `${currentYear}-${currentMonth}-${currentDay}`}))
+
+    // Find the last marked "Present" or "Leave" day
+    const lastMarkedAttendance = await Attendance.findOne({
+      employeeId: userId,
+      status: { $in: ['Present', 'Leave'] }, // Only consider Present and Leave
+    })
+      .sort({ date: 1 }) // Sort by date in descending order to get the last marked attendance
+      .limit(1);
+
+    // If there's a last marked day, find all missed days (but exclude current day)
+    if (lastMarkedAttendance) {
+      const lastMarkedDate = lastMarkedAttendance.date;
+
+      // Get all dates from the last marked date until the day before the current date
+      const missedDays = [];
+      let dayToCheck = moment(lastMarkedDate).add(1, 'days'); // Start from the day after last marked date
+
+      // Loop through all days between last marked date and current day minus one
+      while (dayToCheck.isBefore(moment(`${currentYear}-${currentMonth}-${currentDay}`), 'day')) {
+        missedDays.push(dayToCheck.format('YYYY-MM-DD'));
+        dayToCheck = dayToCheck.add(1, 'days');
+      }
+
+      // Mark all missed days as "Absent" if they are not already "Present" or "Leave"
+      for (const missedDay of missedDays) {
+        const missedAttendance = await Attendance.findOne({
+          employeeId: userId,
+          date: missedDay,
+        });
+
+        if (!missedAttendance || (missedAttendance.status !== 'Present' && missedAttendance.status !== 'Leave' && missedAttendance.status !== 'Weekoff' && missedAttendance.status !== 'Holiday')) {
+          // If attendance is not already marked as Present or Leave, mark it as Absent
+          if (missedAttendance) {
+            missedAttendance.status = 'Absent'; // Mark as "Absent"
+            await missedAttendance.save();
+          } else {
+            // Create an attendance record for the missed day as "Absent"
+            const absentAttendance = new Attendance({
+              employeeId: userId,
+              date: missedDay,
+              status: 'Absent',
+              year: currentYear,
+              month: currentMonth,
+            });
+            await absentAttendance.save();
+          }
+        }
+      }
+    }
+
+    const isSalarySlipExist = await SalarySlip.findOne({ employeeId: userId, month: `${currentYear}-${currentMonth}` });
+
+    if (!isSalarySlipExist) {
+
+      let lastSalarySlip = await SalarySlip.findOne({ employeeId: userId }).sort({ createdAt: -1 });
+
+      const newSalarySlip = await SalarySlip.create({
+        salaryComponents: {
+          ...lastSalarySlip.salaryComponents,
+          bonus: 0,
+          overtime: 0
+        },
+        salaryAmount: lastSalarySlip.salaryAmount,
+        month: `${currentYear}-${currentMonth}`,
+        employeeId: userId
+      })
+    }
+    else {
+
+      //  const date = `${currentYear}-${currentMonth}-${currentDay}`;
+      let isHolidaysExist = await Holidays.find({ "date.datetime.year": Number(currentYear), "date.datetime.month": Number(date.split("/")[0]), active: true });
+
+      isHolidaysExist = isHolidaysExist.map((v, i) => {
+        let daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const fulldate = `${v.date.datetime.year}-${(v.date.datetime.month).toString().padStart(2, "0")}-${(v.date.datetime.day).toString().padStart(2, "0")}`;
+        const exactDate = new Date(fulldate)
+        daysOfWeek = daysOfWeek[exactDate.getDay()];
+        return {
+          daysLength: i + 1,
+          dates: fulldate,
+          days: daysOfWeek
+        }
+      })
+
+      let isSalarySlipExist = await SalarySlip.findOne({ month: `${isHolidaysExist[0].dates.split("-")[0]}-${isHolidaysExist[0].dates.split("-")[1]}`, employeeId: userId });
+
+      isSalarySlipExist.holiday = {
+        daysLength: isHolidaysExist.length,
+        dates: isHolidaysExist.map(v => v.dates),
+        days: isHolidaysExist.map(v => v.days),
+      };
+
+      await isSalarySlipExist.save();
+
+    }
+
+    let users = await User.find();
+    let newUsers = [];
+    const cd = moment().format('YYYY-MM-DD'); // Fixed month/day order
+
+    for (let user of users) {
+      let att = await Attendance.findOne({ date: cd, employeeId: user._id });
+
+      if (att) {
+        newUsers.push({
+          ...user.toObject(),
+          checkInTime: att.checkInTime || "--",
+          checkOutTime: att.checkOutTime || "--",
+          logInDuration: att.logInDuration || "-- : --"
+        });
+      } else {
+        newUsers.push({
+          ...user.toObject(),
+          checkInTime: "--",
+          checkOutTime: "--",
+          logInDuration: "-- : --"
+        });
+      }
+    }
+
+    res.status(200).json({
+      message: 'Attendance marked and salary updated successfully',
+      attendance: attendance,
+      users: newUsers
+      // salarySlip: salarySlip,
+    });
+
+  } catch (error) {
+    console.log("erooorrrr ", error)
+  }
+}
 
 
 // today's all attendance (absent/present/leave)
@@ -392,7 +599,7 @@ exports.updateAttendance = async (req, res) => {
     }
 
     await isAttendanceExist.save();
-    
+
     const attendanceRquestList = await Attendance.find({ "requests.requested": "yes" })
 
     res.status(200).json({

@@ -276,19 +276,48 @@ exports.userLogged = async (req, res, next) => {
 
 // Get all employees (Admin only)
 exports.getAllUsers = async (req, res) => {
+  
   try {
 
     let users = await User.find();
-    let newUsers = []
+      console.log("users ", users)
+
+    let newUsers = [];
+    const currentDate = moment().format('YYYY-MM-DD');
     for (let user of users) {
       let salarySlip = await SalarySlip.findOne({ employeeId: user._id }).sort({ "weekoff.dates": -1 });
-      newUsers.push({ ...user.toObject(), weekoff: salarySlip.weekoff })
+
+      let att = await Attendance.findOne({ date: currentDate, employeeId: user._id });
+      
+        if (att) {
+          newUsers.push({
+            ...user.toObject(),
+            weekoff: salarySlip.weekoff, 
+            checkInTime: att.checkInTime || "--",
+            checkOutTime: att.checkOutTime || "--",
+            loginDuration: att.loginDuration || 0
+          });
+        } else {
+          newUsers.push({
+            ...user.toObject(),
+            weekoff: salarySlip.weekoff, 
+            checkInTime: "--",
+            checkOutTime: "--",
+            loginDuration: 0
+          });
+        }
+
+      // let attendance = null;
+      // if(attendance) attendance = await Attendance.findOne({ employeeId: user._id, date : currentDate });
+     
+      // newUsers.push({ ...user.toObject(), weekoff: salarySlip.weekoff, checkInTime : attendance ? attendance.checkInTime : "--", checkOutTime : attendance ? attendance.checkOutTime : "--", loginDuration : attendance ? attendance.loginDuration : 0 })
     }
 
     console.log("usersss ", newUsers)
 
     res.status(200).json({ users: newUsers });
   } catch (error) {
+    console.log("errorrrrrrrrrrrrr ", error)
     res.status(500).json({ message: 'Error fetching users', error });
   }
 };
@@ -337,10 +366,10 @@ exports.updateUser = async (req, res) => {
   try {
     console.log("id ", req.params)
     console.log("data ", req.body)
-    const existingUser = req.user;
+    const existingUser = await User.findById(req.params.id)
 
     if (!existingUser) {
-      return res.status(404).json({ message: 'User not found or need to login !' });
+      return res.status(404).json({ message: 'User not found !' });
     }
 
     const {
