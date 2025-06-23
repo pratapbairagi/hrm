@@ -274,11 +274,11 @@ const Dashboard = ({user}) => {
     }
     return <h1>No content available</h1>;
   };
-
+  console.log("user ", user)
   return (
     <div className="flex min-h-screen bg-gray-100 position-relative max-w-screen overflow-x-hidden">
       {/* Sidebar - Visible on Desktop and Mobile (Toggled on mobile) */}
-      <aside style={{overflowY:"auto", maxHeight:"100vh", zIndex:"999"}} className={`fixed md:static flex flex-col bg-gray-800 text-white w-64 p-4 space-y-4 ${isSidebarOpen ? 'block' : 'hidden'} md:block`}>
+     {user && <aside style={{overflowY:"auto", maxHeight:"100vh", minHeight:"100vh", zIndex:"999"}} className={`fixed md:static flex flex-col bg-gray-800 text-white w-64 p-4 space-y-4 ${isSidebarOpen ? 'block' : 'hidden'} md:block`}>
         <div className="text-xl font-semibold text-white mb-6">
           <strong>LOGO</strong>
         </div>
@@ -311,24 +311,24 @@ const Dashboard = ({user}) => {
             </div>
           ))}
         </div>
-      </aside>
+      </aside>}
 
       {/* Mobile Hamburger Menu */}
-      <div className={`md:hidden p-4 pt-2 fixed md:static w-screen top-0 left-0 ${isSidebarOpen? "flex justify-end" : "flex justify-start"}`} style={{zIndex:"998"}}>
-        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className={`text-white w-[46px] h-[46px] flex justify-center items-center`}>
+      {/* <div className={`md:hidden p-4 pt-2 fixed md:static w-screen top-0 left-0 ${isSidebarOpen? "flex justify-end" : "flex justify-start"}`} style={{zIndex:"998"}}> */}
+       {(user != null) && <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className={`text-white w-[46px] h-[46px] flex justify-center items-center fixed top-0 ${isSidebarOpen ? "right-3" : "left-3" }`}>
         {isSidebarOpen ? "✕" : "☰"}   
-        </button>
-      </div>
+        </button>}
+      {/* </div> */}
 
       {/* Main Content Area */}
-      <div style={{overflowY:"auto"}} className="flex-1 p-4 md:p-6 max-h-full">
+      {user && <div style={{overflowY:"auto", minWidth:"100vw", width:"max-content"}} className="flex-1 p-4 md:p-6 max-h-full">
         <div className="space-y-6">
           {/* <h2 className="text-3xl font-semibold">Dashboard</h2> */}
           <div className="bg-white max-w-screen">
             {getActiveTabContent()}
           </div>
         </div>
-      </div>
+      </div>}
     </div>
   );
 };

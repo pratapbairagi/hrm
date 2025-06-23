@@ -55,13 +55,13 @@ const Auth = () => {
   };
 
   return (
-    <div className="bg-gray-100 h-screen w-full flex flex-col justify-start">
+    <div className="bg-gray-100 h-screen w-full flex flex-col justify-start items-center">
       <div className='w-full flex justify-start px-3 py-2'>
-        <NavLink to="/" className="px-4 py-1">KMS</NavLink>
+        <NavLink to="/home" className="px-4 py-1">KMS</NavLink>
       </div>
 
       {/* Auth Section */}
-      <section className="flex justify-center py-6 max-h-[98vh] border-t-2 overflow-auto">
+      <section className="flex justify-center py-6 min-w-[90%] max-h-[98vh] border-t-2 overflow-auto">
         <div className="bg-white p-6 pt-4 rounded-lg shadow-lg w-full max-w-md h-full">
           <h2 className="text-lg font-semibold text-center text-gray-800 mb-3">
             {isLogin ? "Login" : "Signup"}

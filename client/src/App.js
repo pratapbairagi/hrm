@@ -73,7 +73,7 @@ const App = () => {
     <Router>
       <div className="container-fluid w-full flex h-screen">
         {/* {auth && <Navbar />} */}
-        {/* {auth && <Dashboard />} */}
+        <Dashboard user={user} />
         <ToastContainer />
       <AppWrapper setAuth={setAuth} setUser={setUser}>
         <Routes>

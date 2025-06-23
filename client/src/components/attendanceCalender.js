@@ -316,16 +316,16 @@ const webcamError = (error) => {
 
       {/* Button to Mark Today's Attendance */}
       <div className="flex justify-center">
-        {/* <button
+        <button
           onClick={() => handleMarkAttendance(new Date().getDate())}
           className="px-3 py-2 bg-blue-600 text-sm text-white font-bold rounded-md hover:bg-blue-700 transition duration-300"
         >
           Mark Today's Attendance
-        </button> */}
-        {/* <button
+        </button>
+        <button
           onClick={() => checkQrCodeToMarkAttendance({ date : new Date().getDate(), time : new Date().getTime() })}
           className="px-3 py-2 bg-blue-600 text-sm text-white font-bold rounded-md hover:bg-blue-700 transition duration-300"
-        >Mark Attendance</button> */}
+        >Mark Attendance</button>
       </div>
 
       {/* Popup Form for Attendance Update / Overtime Request */}
@@ -375,18 +375,6 @@ const webcamError = (error) => {
           </div>
         </div>
       )}
-      <QrReader
-          delay={300}
-          onError={webcamError}
-          onScan={webcamScan}
-          legacyMode={false}
-          facingMode={"environment"}
-          className=''
-        />
-
-      <div className="card-footer rounded mb-1">
-        <h6>WebCam Result: {webcamResult}</h6>
-      </div>
     </div>
   );
 };
